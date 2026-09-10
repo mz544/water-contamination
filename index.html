@@ -1,92 +1,248 @@
-<script>
-    // Configuration
-    const CORRECT_PASSWORD = "admin123";
-    const TOTAL_BUTTONS = 100;
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florida Water Status Tracker</title>
 
-    const gridContainer = document.getElementById('buttonGrid');
-
-    // Load previously saved data
-    let savedData = JSON.parse(localStorage.getItem("waterBodyData")) || {};
-
-    // Dynamically generate 100 buttons
-    for (let i = 1; i <= TOTAL_BUTTONS; i++) {
-
-        const button = document.createElement('button');
-        button.className = 'water-btn';
-        button.id = `water-body-${i}`;
-
-        const titleSpan = document.createElement('span');
-        titleSpan.className = 'water-body-name';
-        titleSpan.innerText = `Water Body #${i}`;
-
-        const statusSpan = document.createElement('span');
-        statusSpan.className = 'status-text';
-
-        // Check if this button already has saved information
-        if (savedData[i]) {
-            statusSpan.innerText = `Status: ${savedData[i].status}`;
-            button.style.backgroundColor = savedData[i].color;
-        } else {
-            statusSpan.innerText = 'Status: Safe';
-            button.style.backgroundColor = '#211F9F';
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #61c0e9;
+            padding: 20px;
+            text-align: center;
         }
 
-        button.appendChild(titleSpan);
-        button.appendChild(statusSpan);
+        h1 {
+            color: #333333;
+            text-align: center;
+        }
 
-        button.addEventListener('click', () => {
+        .admin-panel {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.531);
+            border-radius: 8px;
+            display: inline-block;
+        }
 
-            const passwordInput = prompt(
-                `Enter password to modify Water Body #${i}:`
-            );
+        /* Grid layout for all 100 buttons */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
 
-            if (passwordInput === null) return;
+        /* Water body buttons */
+        .water-btn {
+            border: none;
+            color: white;
+            padding: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
 
-            if (passwordInput === CORRECT_PASSWORD) {
+        .water-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
 
-                // Ask for new status
-                const currentStatus =
-                    statusSpan.innerText.replace('Status: ', '');
+        .water-body-name {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
 
-                const newStatus = prompt(
-                    "Enter new contamination status text:",
-                    currentStatus
-                );
+        .status-text {
+            font-size: 12px;
+            background: rgba(17, 23, 88, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
 
-                if (newStatus !== null && newStatus.trim() !== "") {
-                    statusSpan.innerText = `Status: ${newStatus.trim()}`;
-                }
+<body>
 
-                // Ask for new color
-                const currentColor =
-                    button.style.backgroundColor || '#211F9F';
+    <h1>Water Contamination Website</h1>
 
-                const newColor = prompt(
-                    "Enter a color hex code or CSS color name:",
-                    currentColor
-                );
+    <p>
+        Click any water body button to update its status
+        (Password Required).
+    </p>
 
-                if (newColor !== null && newColor.trim() !== "") {
-                    button.style.backgroundColor = newColor.trim();
-                }
+    <!-- The 100 water body buttons will load here -->
+    <div class="grid-container" id="buttonGrid"></div>
 
-                // Save this button's information
-                savedData[i] = {
-                    status: statusSpan.innerText.replace('Status: ', ''),
-                    color: button.style.backgroundColor
-                };
+    <script>
+        // ==============================
+        // CONFIGURATION
+        // ==============================
 
-                // Save everything into the browser
-                localStorage.setItem(
-                    "waterBodyData",
-                    JSON.stringify(savedData)
-                );
+        const CORRECT_PASSWORD = "admin123";
+        const TOTAL_BUTTONS = 100;
+
+        const gridContainer = document.getElementById("buttonGrid");
+
+        // ==============================
+        // LOAD SAVED DATA
+        // ==============================
+
+        let savedData = JSON.parse(
+            localStorage.getItem("waterBodyData")
+        ) || {};
+
+        // ==============================
+        // CREATE 100 BUTTONS
+        // ==============================
+
+        for (let i = 1; i <= TOTAL_BUTTONS; i++) {
+
+            // Create button
+            const button = document.createElement("button");
+            button.className = "water-btn";
+            button.id = `water-body-${i}`;
+
+            // Create water body name
+            const titleSpan = document.createElement("span");
+            titleSpan.className = "water-body-name";
+            titleSpan.innerText = `Water Body #${i}`;
+
+            // Create status
+            const statusSpan = document.createElement("span");
+            statusSpan.className = "status-text";
+
+            // ==============================
+            // LOAD SAVED SETTINGS
+            // ==============================
+
+            if (savedData[i]) {
+
+                statusSpan.innerText =
+                    `Status: ${savedData[i].status}`;
+
+                button.style.backgroundColor =
+                    savedData[i].color;
 
             } else {
-                alert("Incorrect password! Access denied.");
-            }
-        });
 
-        gridContainer.appendChild(button);
-    }
-</script>
+                // Default settings
+                statusSpan.innerText = "Status: Safe";
+                button.style.backgroundColor = "#211F9F";
+            }
+
+            // Add elements to button
+            button.appendChild(titleSpan);
+            button.appendChild(statusSpan);
+
+            // ==============================
+            // BUTTON CLICK
+            // ==============================
+
+            button.addEventListener("click", () => {
+
+                // Ask for password
+                const passwordInput = prompt(
+                    `Enter password to modify Water Body #${i}:`
+                );
+
+                // Cancel
+                if (passwordInput === null) {
+                    return;
+                }
+
+                // Check password
+                if (passwordInput === CORRECT_PASSWORD) {
+
+                    // ==============================
+                    // CHANGE STATUS
+                    // ==============================
+
+                    const currentStatus =
+                        statusSpan.innerText.replace(
+                            "Status: ",
+                            ""
+                        );
+
+                    const newStatus = prompt(
+                        "Enter new contamination status text:",
+                        currentStatus
+                    );
+
+                    if (
+                        newStatus !== null &&
+                        newStatus.trim() !== ""
+                    ) {
+
+                        statusSpan.innerText =
+                            `Status: ${newStatus.trim()}`;
+                    }
+
+                    // ==============================
+                    // CHANGE COLOR
+                    // ==============================
+
+                    const currentColor =
+                        button.style.backgroundColor ||
+                        "#211F9F";
+
+                    const newColor = prompt(
+                        "Enter a color hex code or CSS color name:",
+                        currentColor
+                    );
+
+                    if (
+                        newColor !== null &&
+                        newColor.trim() !== ""
+                    ) {
+
+                        button.style.backgroundColor =
+                            newColor.trim();
+                    }
+
+                    // ==============================
+                    // SAVE CHANGES
+                    // ==============================
+
+                    savedData[i] = {
+                        status: statusSpan.innerText.replace(
+                            "Status: ",
+                            ""
+                        ),
+
+                        color: button.style.backgroundColor
+                    };
+
+                    localStorage.setItem(
+                        "waterBodyData",
+                        JSON.stringify(savedData)
+                    );
+
+                } else {
+
+                    alert(
+                        "Incorrect password! Access denied."
+                    );
+                }
+            });
+
+            // Add button to page
+            gridContainer.appendChild(button);
+        }
+    </script>
+
+</body>
+</html>
+```
