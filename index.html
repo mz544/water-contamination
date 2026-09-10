@@ -92,7 +92,7 @@
 
 
         // ==========================================
-        // 100 UNIQUE FLORIDA WATER BODIES
+        // FLORIDA WATER BODIES
         // ==========================================
 
         const waterBodies = [
@@ -187,7 +187,7 @@
             "Shoal River",
             "Bayou Chico",
 
-            // BAYS, LAGOONS, ESTUARIES & COASTAL WATERS
+            // BAYS, LAGOONS AND COASTAL WATERS
             "Florida Bay",
             "Biscayne Bay",
             "Tampa Bay",
@@ -216,7 +216,7 @@
 
 
         // ==========================================
-        // CREATE THE WATER BODY BUTTONS
+        // GET GRID
         // ==========================================
 
         const gridContainer =
@@ -233,7 +233,7 @@
 
 
         // ==========================================
-        // CREATE EACH BUTTON
+        // CREATE BUTTONS
         // ==========================================
 
         waterBodies.forEach((waterBody, index) => {
@@ -258,7 +258,7 @@
                 waterBody;
 
 
-            // Status text
+            // Status
             const statusSpan =
                 document.createElement("span");
 
@@ -267,7 +267,7 @@
 
 
             // ==========================================
-            // LOAD SAVED STATUS
+            // LOAD SAVED SETTINGS
             // ==========================================
 
             if (savedData[index]) {
@@ -284,7 +284,7 @@
                     "Status: Safe";
 
                 button.style.backgroundColor =
-                    "#211F9F";
+                    "blue";
             }
 
 
@@ -304,14 +304,13 @@
                     );
 
 
-                // Cancel
                 if (passwordInput === null) {
                     return;
                 }
 
 
                 // ==========================================
-                // CHECK PASSWORD
+                // PASSWORD CHECK
                 // ==========================================
 
                 if (passwordInput === CORRECT_PASSWORD) {
@@ -349,30 +348,49 @@
                     // CHANGE COLOR
                     // ==========================================
 
-                    const currentColor =
-                        button.style.backgroundColor ||
-                        "#211F9F";
+                    let newColor;
 
+                    while (true) {
 
-                    const newColor =
-                        prompt(
-                            "Enter a color hex code or CSS color name:",
-                            currentColor
+                        newColor = prompt(
+                            "Enter a color: red, blue, or green",
+                            button.style.backgroundColor
                         );
 
 
-                    if (
-                        newColor !== null &&
-                        newColor.trim() !== ""
-                    ) {
+                        // User canceled
+                        if (newColor === null) {
+                            break;
+                        }
 
-                        button.style.backgroundColor =
-                            newColor.trim();
+
+                        newColor =
+                            newColor.trim().toLowerCase();
+
+
+                        // Check allowed colors
+                        if (
+                            newColor === "red" ||
+                            newColor === "blue" ||
+                            newColor === "green"
+                        ) {
+
+                            button.style.backgroundColor =
+                                newColor;
+
+                            break;
+
+                        } else {
+
+                            alert(
+                                "Invalid color! Please type only red, blue, or green."
+                            );
+                        }
                     }
 
 
                     // ==========================================
-                    // SAVE EVERYTHING
+                    // SAVE CHANGES
                     // ==========================================
 
                     savedData[index] = {
@@ -404,7 +422,7 @@
             });
 
 
-            // Add button to the page
+            // Add button
             gridContainer.appendChild(button);
 
         });
