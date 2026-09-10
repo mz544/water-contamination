@@ -1,0 +1,92 @@
+<script>
+    // Configuration
+    const CORRECT_PASSWORD = "admin123";
+    const TOTAL_BUTTONS = 100;
+
+    const gridContainer = document.getElementById('buttonGrid');
+
+    // Load previously saved data
+    let savedData = JSON.parse(localStorage.getItem("waterBodyData")) || {};
+
+    // Dynamically generate 100 buttons
+    for (let i = 1; i <= TOTAL_BUTTONS; i++) {
+
+        const button = document.createElement('button');
+        button.className = 'water-btn';
+        button.id = `water-body-${i}`;
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'water-body-name';
+        titleSpan.innerText = `Water Body #${i}`;
+
+        const statusSpan = document.createElement('span');
+        statusSpan.className = 'status-text';
+
+        // Check if this button already has saved information
+        if (savedData[i]) {
+            statusSpan.innerText = `Status: ${savedData[i].status}`;
+            button.style.backgroundColor = savedData[i].color;
+        } else {
+            statusSpan.innerText = 'Status: Safe';
+            button.style.backgroundColor = '#211F9F';
+        }
+
+        button.appendChild(titleSpan);
+        button.appendChild(statusSpan);
+
+        button.addEventListener('click', () => {
+
+            const passwordInput = prompt(
+                `Enter password to modify Water Body #${i}:`
+            );
+
+            if (passwordInput === null) return;
+
+            if (passwordInput === CORRECT_PASSWORD) {
+
+                // Ask for new status
+                const currentStatus =
+                    statusSpan.innerText.replace('Status: ', '');
+
+                const newStatus = prompt(
+                    "Enter new contamination status text:",
+                    currentStatus
+                );
+
+                if (newStatus !== null && newStatus.trim() !== "") {
+                    statusSpan.innerText = `Status: ${newStatus.trim()}`;
+                }
+
+                // Ask for new color
+                const currentColor =
+                    button.style.backgroundColor || '#211F9F';
+
+                const newColor = prompt(
+                    "Enter a color hex code or CSS color name:",
+                    currentColor
+                );
+
+                if (newColor !== null && newColor.trim() !== "") {
+                    button.style.backgroundColor = newColor.trim();
+                }
+
+                // Save this button's information
+                savedData[i] = {
+                    status: statusSpan.innerText.replace('Status: ', ''),
+                    color: button.style.backgroundColor
+                };
+
+                // Save everything into the browser
+                localStorage.setItem(
+                    "waterBodyData",
+                    JSON.stringify(savedData)
+                );
+
+            } else {
+                alert("Incorrect password! Access denied.");
+            }
+        });
+
+        gridContainer.appendChild(button);
+    }
+</script>
