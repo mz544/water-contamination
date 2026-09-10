@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,18 +16,12 @@
 
         h1 {
             color: #333333;
-            text-align: center;
         }
 
-        .admin-panel {
-            margin-bottom: 20px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.531);
-            border-radius: 8px;
-            display: inline-block;
+        p {
+            font-size: 16px;
         }
 
-        /* Grid layout for all 100 buttons */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -35,7 +30,6 @@
             margin: 20px auto;
         }
 
-        /* Water body buttons */
         .water-btn {
             border: none;
             color: white;
@@ -44,18 +38,22 @@
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease,
+                        transform 0.2s ease;
+
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 80px;
+
+            min-height: 85px;
         }
 
         .water-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
         }
 
         .water-body-name {
@@ -65,8 +63,8 @@
 
         .status-text {
             font-size: 12px;
-            background: rgba(17, 23, 88, 0.2);
-            padding: 2px 6px;
+            background: rgba(17, 23, 88, 0.25);
+            padding: 3px 7px;
             border-radius: 4px;
             margin-top: 5px;
         }
@@ -75,99 +73,253 @@
 
 <body>
 
-    <h1>Water Contamination Website</h1>
+    <h1>Florida Water Contamination Website</h1>
 
     <p>
         Click any water body button to update its status
         (Password Required).
     </p>
 
-    <!-- The 100 water body buttons will load here -->
     <div class="grid-container" id="buttonGrid"></div>
 
     <script>
-        // ==============================
-        // CONFIGURATION
-        // ==============================
+
+        // ==========================================
+        // PASSWORD
+        // ==========================================
 
         const CORRECT_PASSWORD = "admin123";
-        const TOTAL_BUTTONS = 100;
 
-        const gridContainer = document.getElementById("buttonGrid");
 
-        // ==============================
+        // ==========================================
+        // 100 UNIQUE FLORIDA WATER BODIES
+        // ==========================================
+
+        const waterBodies = [
+
+            // LAKES
+            "Lake Okeechobee",
+            "Lake Apopka",
+            "Lake George",
+            "Lake Tohopekaliga",
+            "Lake Istokpoga",
+            "Lake Seminole",
+            "Lake Tarpon",
+            "Lake Weir",
+            "Lake Monroe",
+            "Lake Dora",
+            "Lake Eustis",
+            "Lake Harris",
+            "Lake Griffin",
+            "Lake Minneola",
+            "Lake Butler",
+            "Lake Conway",
+            "Lake Jessup",
+            "Lake Harney",
+            "Lake Poinsett",
+            "Lake Washington",
+            "Lake Winder",
+            "Lake Blue Cypress",
+            "Lake Santa Fe",
+            "Lake Iamonia",
+            "Lake Lafayette",
+            "Lake Miccosukee",
+            "Lake Jackson",
+            "Lake Munson",
+            "Lake Talquin",
+            "Lake Panasoffkee",
+            "Lake Thonotosassa",
+            "Lake Hollingsworth",
+            "Lake Haines",
+            "Lake Alfred",
+            "Lake Ariana",
+            "Lake Blue",
+            "Lake Marianna",
+            "Lake Arbuckle",
+            "Lake Rosalie",
+            "Lake Hatchineha",
+            "Lake Crescent",
+            "Lake Alligator",
+            "Lake Tallavana",
+            "Lake Lochloosa",
+            "Lake Persimmon",
+            "Lake Roberts",
+
+            // RIVERS AND CREEKS
+            "St. Johns River",
+            "St. Marys River",
+            "Suwannee River",
+            "Santa Fe River",
+            "Rainbow River",
+            "Hillsborough River",
+            "Withlacoochee River",
+            "Peace River",
+            "Myakka River",
+            "Manatee River",
+            "Alafia River",
+            "Little Manatee River",
+            "Anclote River",
+            "Crystal River",
+            "Homosassa River",
+            "Chassahowitzka River",
+            "Waccasassa River",
+            "Aucilla River",
+            "Wakulla River",
+            "St. Marks River",
+            "Ochlockonee River",
+            "Apalachicola River",
+            "Chipola River",
+            "Choctawhatchee River",
+            "Blackwater River",
+            "Perdido River",
+            "Ocklawaha River",
+            "Kissimmee River",
+            "Caloosahatchee River",
+            "Fisheating Creek",
+            "Wekiva River",
+            "Econlockhatchee River",
+            "Spruce Creek",
+            "Orange Creek",
+            "St. Lucie River",
+            "Loxahatchee River",
+            "Palatlakaha River",
+            "Wacissa River",
+            "Shoal River",
+            "Bayou Chico",
+
+            // BAYS, LAGOONS, ESTUARIES & COASTAL WATERS
+            "Florida Bay",
+            "Biscayne Bay",
+            "Tampa Bay",
+            "Sarasota Bay",
+            "Charlotte Harbor",
+            "Pensacola Bay",
+            "St. Andrews Bay",
+            "St. Joseph Bay",
+            "Apalachicola Bay",
+            "Boca Ciega Bay",
+            "Lemon Bay",
+            "Estero Bay",
+            "Gasparilla Sound",
+            "Matlacha Pass",
+            "Pine Island Sound",
+            "Mosquito Lagoon",
+            "Banana River",
+            "Indian River Lagoon",
+            "Lake Worth Lagoon",
+            "Santa Rosa Sound",
+            "Rookery Bay",
+            "Cockroach Bay",
+            "Alligator Harbor",
+            "Pellicer Creek"
+        ];
+
+
+        // ==========================================
+        // CREATE THE WATER BODY BUTTONS
+        // ==========================================
+
+        const gridContainer =
+            document.getElementById("buttonGrid");
+
+
+        // ==========================================
         // LOAD SAVED DATA
-        // ==============================
+        // ==========================================
 
         let savedData = JSON.parse(
-            localStorage.getItem("waterBodyData")
+            localStorage.getItem("floridaWaterData")
         ) || {};
 
-        // ==============================
-        // CREATE 100 BUTTONS
-        // ==============================
 
-        for (let i = 1; i <= TOTAL_BUTTONS; i++) {
+        // ==========================================
+        // CREATE EACH BUTTON
+        // ==========================================
 
-            // Create button
-            const button = document.createElement("button");
+        waterBodies.forEach((waterBody, index) => {
+
+            const button =
+                document.createElement("button");
+
             button.className = "water-btn";
-            button.id = `water-body-${i}`;
 
-            // Create water body name
-            const titleSpan = document.createElement("span");
-            titleSpan.className = "water-body-name";
-            titleSpan.innerText = `Water Body #${i}`;
+            button.id =
+                `water-body-${index}`;
 
-            // Create status
-            const statusSpan = document.createElement("span");
-            statusSpan.className = "status-text";
 
-            // ==============================
-            // LOAD SAVED SETTINGS
-            // ==============================
+            // Water body name
+            const titleSpan =
+                document.createElement("span");
 
-            if (savedData[i]) {
+            titleSpan.className =
+                "water-body-name";
+
+            titleSpan.innerText =
+                waterBody;
+
+
+            // Status text
+            const statusSpan =
+                document.createElement("span");
+
+            statusSpan.className =
+                "status-text";
+
+
+            // ==========================================
+            // LOAD SAVED STATUS
+            // ==========================================
+
+            if (savedData[index]) {
 
                 statusSpan.innerText =
-                    `Status: ${savedData[i].status}`;
+                    `Status: ${savedData[index].status}`;
 
                 button.style.backgroundColor =
-                    savedData[i].color;
+                    savedData[index].color;
 
             } else {
 
-                // Default settings
-                statusSpan.innerText = "Status: Safe";
-                button.style.backgroundColor = "#211F9F";
+                statusSpan.innerText =
+                    "Status: Safe";
+
+                button.style.backgroundColor =
+                    "#211F9F";
             }
 
-            // Add elements to button
+
             button.appendChild(titleSpan);
             button.appendChild(statusSpan);
 
-            // ==============================
+
+            // ==========================================
             // BUTTON CLICK
-            // ==============================
+            // ==========================================
 
             button.addEventListener("click", () => {
 
-                // Ask for password
-                const passwordInput = prompt(
-                    `Enter password to modify Water Body #${i}:`
-                );
+                const passwordInput =
+                    prompt(
+                        `Enter password to modify ${waterBody}:`
+                    );
+
 
                 // Cancel
                 if (passwordInput === null) {
                     return;
                 }
 
-                // Check password
+
+                // ==========================================
+                // CHECK PASSWORD
+                // ==========================================
+
                 if (passwordInput === CORRECT_PASSWORD) {
 
-                    // ==============================
+
+                    // ==========================================
                     // CHANGE STATUS
-                    // ==============================
+                    // ==========================================
 
                     const currentStatus =
                         statusSpan.innerText.replace(
@@ -175,10 +327,13 @@
                             ""
                         );
 
-                    const newStatus = prompt(
-                        "Enter new contamination status text:",
-                        currentStatus
-                    );
+
+                    const newStatus =
+                        prompt(
+                            `Enter new contamination status for ${waterBody}:`,
+                            currentStatus
+                        );
+
 
                     if (
                         newStatus !== null &&
@@ -189,18 +344,22 @@
                             `Status: ${newStatus.trim()}`;
                     }
 
-                    // ==============================
+
+                    // ==========================================
                     // CHANGE COLOR
-                    // ==============================
+                    // ==========================================
 
                     const currentColor =
                         button.style.backgroundColor ||
                         "#211F9F";
 
-                    const newColor = prompt(
-                        "Enter a color hex code or CSS color name:",
-                        currentColor
-                    );
+
+                    const newColor =
+                        prompt(
+                            "Enter a color hex code or CSS color name:",
+                            currentColor
+                        );
+
 
                     if (
                         newColor !== null &&
@@ -211,23 +370,29 @@
                             newColor.trim();
                     }
 
-                    // ==============================
-                    // SAVE CHANGES
-                    // ==============================
 
-                    savedData[i] = {
-                        status: statusSpan.innerText.replace(
-                            "Status: ",
-                            ""
-                        ),
+                    // ==========================================
+                    // SAVE EVERYTHING
+                    // ==========================================
 
-                        color: button.style.backgroundColor
+                    savedData[index] = {
+
+                        status:
+                            statusSpan.innerText.replace(
+                                "Status: ",
+                                ""
+                            ),
+
+                        color:
+                            button.style.backgroundColor
                     };
 
+
                     localStorage.setItem(
-                        "waterBodyData",
+                        "floridaWaterData",
                         JSON.stringify(savedData)
                     );
+
 
                 } else {
 
@@ -235,11 +400,15 @@
                         "Incorrect password! Access denied."
                     );
                 }
+
             });
 
-            // Add button to page
+
+            // Add button to the page
             gridContainer.appendChild(button);
-        }
+
+        });
+
     </script>
 
 </body>
